@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "rootDir": "src",
+    "declaration": true,
+    "allowSyntheticDefaultImports": true,
+    "outDir": "build",
+    "module": "esnext",
+    "target": "esnext",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "jsx": "react",
+    "moduleResolution": "node",
+    "forceConsistentCasingInFileNames": true,
+    "strictNullChecks": true,
+    "esModuleInterop": true,
+    "strict": true,
+    "isolatedModules": true
+  },
+  "exclude": [
+    "node_modules",
+    "build",
+    "tests",
+    "**/__tests__/**/*",
+    "**/__stories__/**/*",
+    "*.test.ts",
+    "*.test.tsx"
+  ],
+  "include": [
+    "src"
+  ]
+}
