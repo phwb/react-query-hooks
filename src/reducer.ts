@@ -1,20 +1,23 @@
 import {cancel, error, start, success} from './actions';
-import {DefaultPayload, ErrorPayload, State, SuccessPayload} from './types';
+import {CancelPayload, DefaultPayload, ErrorPayload, State, SuccessPayload} from './types';
 import {createReducer, initialState} from './utils';
 
-const startReducer = (state: State, {key}: DefaultPayload): State => {
+const startReducer = (state: State, {key, query}: DefaultPayload): State => {
   const currentState = state[key as string];
+  const mountedComponents = currentState
+    ? currentState.mountedComponents + 1
+    : 1;
 
-  if (currentState) {
+  if (currentState && !query.reset) {
     return {
       ...state,
       [key]: {
         ...currentState,
+        mountedComponents,
         queryState: {
           ...currentState.queryState,
           loading: true,
         },
-        mountedComponents: currentState.mountedComponents + 1,
       },
     };
   }
@@ -22,11 +25,11 @@ const startReducer = (state: State, {key}: DefaultPayload): State => {
   return {
     ...state,
     [key]: {
+      mountedComponents,
       queryState: {
         ...initialState,
         loading: true,
       },
-      mountedComponents: 1,
     },
   };
 };
@@ -72,7 +75,7 @@ const errorReducer = (state: State, {key, error}: ErrorPayload): State => {
   return state;
 };
 
-const cancelReducer = (state: State, {key}: DefaultPayload): State => {
+const cancelReducer = (state: State, {key, cleanup}: CancelPayload): State => {
   const currentState = state[key as string];
 
   if (currentState && currentState.mountedComponents > 1) {
@@ -85,13 +88,17 @@ const cancelReducer = (state: State, {key}: DefaultPayload): State => {
     };
   }
 
-  const {
-    // @ts-ignore TS2538: Type 'symbol' cannot be used as an index type.
-    [key]: omittedKey,
-    ...restState
-  } = state;
+  // cleanup устанавливается при анмаунте компонента
+  if (cleanup) {
+    const {
+      [key as string]: omittedKey,
+      ...restState
+    } = state;
 
-  return restState;
+    return restState;
+  }
+
+  return state;
 };
 
 export const reducer = createReducer<State>({

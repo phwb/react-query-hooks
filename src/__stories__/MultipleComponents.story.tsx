@@ -8,15 +8,14 @@ const style: React.CSSProperties = {
   justifyContent: 'space-between',
 };
 const key = Symbol('key');
-const toRequest = (withoutQuery?: boolean): QueryConfig => ({
-  url: 'https://randomuser.me/api/?seed=foobar&inc=name',
+const toRequest = (loadOnMount = true, reset = false): QueryConfig => ({
+  url: 'https://randomuser.me/api/?inc=name',
   key,
-  ...withoutQuery && {
-    loadOnMount: false,
-  },
+  loadOnMount,
+  reset,
 });
 
-const FirstLoader: React.FC<any> = ({children, text}) => {
+const FirstLoader: React.FC<any> = ({children, text, reset}) => {
   const [config, setConfig] = useState(toRequest());
   const {
     data,
@@ -34,13 +33,13 @@ const FirstLoader: React.FC<any> = ({children, text}) => {
           <div>{children}</div>
         </>
       )}
-      <button onClick={() => setConfig(toRequest())}>update component</button>
+      <button onClick={() => setConfig(toRequest(undefined, reset))}>update component</button>
     </div>
   );
 };
 
-const SecondLoader: React.FC<any> = ({children, text, withoutQuery}) => {
-  const config = useMemo(() => toRequest(withoutQuery), [withoutQuery]);
+const SecondLoader: React.FC<any> = ({children, text, loadOnMount}) => {
+  const config = useMemo(() => toRequest(loadOnMount), [loadOnMount]);
   const {
     data,
     loading,
@@ -82,33 +81,43 @@ const MultipleComponents = () => {
 };
 
 const MultipleWithoutQuery: React.FC = () => {
+  const [reset, setReset] = useState(false);
   const [visible, setVisible] = useState(false);
-  const [withoutQuery, setWithout] = useState(true);
+  const [loadOnMount, setLoadOnMount] = useState(false);
 
   return (
-    <div style={style}>
-      <FirstLoader text="loading first..."/>
-      {visible && (
-        <SecondLoader text="loading second..." withoutQuery={withoutQuery}>
-          {withoutQuery && (
-            <button onClick={() => setWithout(false)}>do request</button>
-          )}
-          <button
-            onClick={() => {
-              setVisible(false);
-              setWithout(true);
-            }}
-          >
-            unmount second
-          </button>
-        </SecondLoader>
-      )}
-      {!visible && (
-        <div>
-          <button onClick={() => setVisible(true)}>mount second</button>
-        </div>
-      )}
-    </div>
+    <>
+      <div>
+        <label>
+          <input type="checkbox" checked={reset} onChange={() => setReset(!reset)}/>
+          {` reset data`}
+        </label>
+      </div>
+      <div style={style}>
+        <FirstLoader text="loading first..." reset={reset}/>
+        {visible && (
+          <SecondLoader text="loading second..." loadOnMount={loadOnMount}>
+            {!loadOnMount && (
+              <button onClick={() => setLoadOnMount(true)}>do request</button>
+            )}
+            <button
+              onClick={() => {
+                setVisible(false);
+                setLoadOnMount(false);
+              }}
+            >
+              unmount second
+            </button>
+          </SecondLoader>
+        )}
+        {!visible && (
+          <div>
+            <button onClick={() => setVisible(true)}>mount second</button>
+          </div>
+        )}
+      </div>
+
+    </>
   );
 };
 

@@ -97,7 +97,7 @@ export const QueryProvider: React.FC<ProviderProps> = ({client, children}) => {
       query,
     }));
   }, [client]);
-  const cancelRequest = useCallback((query: QueryConfig, key: PropertyKey) => {
+  const cancelRequest = useCallback((query: QueryConfig, key: PropertyKey, cleanup: boolean) => {
     const cancelRequest = requestCache.current.get(key);
 
     if (cancelRequest) {
@@ -110,6 +110,7 @@ export const QueryProvider: React.FC<ProviderProps> = ({client, children}) => {
     dispatch(cancel({
       key,
       query,
+      cleanup,
     }));
   }, []);
 

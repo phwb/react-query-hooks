@@ -34,6 +34,7 @@ export interface QueryConfig<Body = unknown> extends ClientOptions<Body> {
   refresh?: BooleanFunction;
   retry?: BooleanFunction;
   loadOnMount?: boolean;
+  reset?: boolean;
 }
 
 export type State = Record<PropertyKey, {
@@ -58,4 +59,8 @@ export interface SuccessPayload extends DefaultPayload {
 
 export interface ErrorPayload extends DefaultPayload {
   error: any;
+}
+
+export interface CancelPayload extends DefaultPayload {
+  cleanup: boolean;
 }
