@@ -1,3 +1,5 @@
 import {createContext} from 'react';
 
-export const Context = createContext<any>(null);
+import {MayBeRequestContext} from '../types';
+
+export const Context = createContext<MayBeRequestContext>(null);

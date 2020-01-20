@@ -1,6 +1,6 @@
 # React Query Hooks
 
-## Installation (not published yet)
+## Установка
 
 React Query Hooks requires **React 16.8.3 or later**.
 
@@ -8,36 +8,42 @@ React Query Hooks requires **React 16.8.3 or later**.
 npm install --save @yandex-taxi/react-query-hooks
 ```
 
-## Providing the Client
+## Разработка
 
-```jsx
+Демо
+```
+npm start
+```
+
+## Использование
+
+## Обернуть приложение в RequestProvider
+
+```jsx harmony
 import React from 'react'
 import ReactDOM from 'react-dom'
-import {fetchClient, QueryProvider} from '@yandex-taxi/react-query-hooks';
+import {RequestProvider} from '@yandex-taxi/react-query-hooks';
 
 ReactDOM.render(
-  <QueryProvider client={fetchClient('json')}>
-    <SimpleQuery/>
-  </QueryProvider>,
+  <RequestProvider>
+    <SimpleRequest/>
+  </RequestProvider>,
   document.getElementById('root')
 )
 ```
 
-## Usage
+#### Загрузка данных
 
-**Note**: `config` object always should be memoized.
-
-#### Load data on mount
-```jsx
+```jsx harmony
 import React from 'react'
-import {useQuery} from '@yandex-taxi/react-query-hooks';
+import {useRequest} from '@yandex-taxi/react-query-hooks';
 
-const config = {
-  url: 'https://randomuser.me/api/',
-};
+const fetchRandomUser = () => fetch('https://randomuser.me/api?inc=name')
+  .then(response => response.json())
+  .then(response => response.results[0].name);
 
-const SimpleQuery = () => {
-  const {data, loading} = useQuery(config);
+const SimpleRequest = () => {
+  const { loading, data, error } = useRequest(fetchRandomUser);
 
   return (
     <>
@@ -45,46 +51,43 @@ const SimpleQuery = () => {
         <div>loading...</div>
       )}
       {data && (
-        <pre>{JSON.stringify(data, null, 2)}</pre>
+        <h1>Hello, {`${data.title} ${data.first} ${data.last}`}!</h1>
       )}
     </>
   );
 };
 ```
 
-#### Simple mutation
-```jsx
-import React, {useState} from 'react';
-import {useQuery} from '@yandex-taxi/react-query-hooks';
+#### Загрузка данных с параметрами
 
-const toMutationRequest = (seed: string): QueryConfig => ({
-  url: `https://randomuser.me/api/?seed=${seed}`,
-});
+```jsx harmony
+import React from 'react'
+import {useRequest} from '@yandex-taxi/react-query-hooks';
 
-const SimpleMutation = () => {
-  const [seed, setSeed] = useState('foobar');
-  const [config, setConfig] = useState();
-  const {data, loading} = useQuery(config);
+const fetchFooUser = (id) => fetch(`https://randomuser.me/api?inc=name&seed=foo${id}`)
+  .then(response => response.json())
+  .then(response => response.results[0].name);
+
+const ParameterRequest = () => {
+  const [id, setId] = useState(0);
+  const request = useCallback(() => fetchFooUser(`${id}`), [id]);
+  const {
+    loading,
+    data,
+  } = useRequest(request);
 
   return (
     <>
-      <form
-        onSubmit={event => {
-          event.preventDefault();
-
-          if (seed) {
-            setConfig(toMutationRequest(seed));
-          }
-        }}
-      >
-        <input value={seed} onChange={(event => setSeed(event.target.value))} placeholder="seed"/>
-        <button type="submit">load</button>
-      </form>
       {loading && (
         <div>loading...</div>
       )}
       {data && (
-        <pre>{JSON.stringify(data.results[0], null, 2)}</pre>
+        <div>
+          <button onClick={() => setId(id - 1)}>prev user</button>
+          {` current id: ${id} `}
+          <button onClick={() => setId(id + 1)}>next user</button>
+          <h1>Hello, {`${data.title} ${data.first} ${data.last}`}!</h1>
+        </div>
       )}
     </>
   );

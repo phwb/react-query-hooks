@@ -1,10 +1,12 @@
+export interface RandomUserName {
+  title: string,
+  first: string,
+  last: string
+}
+
 export interface RandomUser {
   gender: string,
-  name: {
-    title: string,
-    first: string,
-    last: string
-  },
+  name: RandomUserName,
   'location': {
     'street': string,
     'city': string,

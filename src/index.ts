@@ -1,5 +1,3 @@
-export {QueryProvider} from './components/Provider';
-export {useQuery} from './hooks/useQuery';
-export {reload, reloadOnce, reloadTwice} from './helpers';
-export * from './clients';
+export {RequestProvider} from './components/RequestProvider';
+export {useRequest} from './hooks/useRequest';
 export * from './types';
