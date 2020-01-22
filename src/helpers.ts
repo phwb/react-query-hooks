@@ -1,4 +1,4 @@
-import {Predicate, PromiseFunction} from './types';
+import {PredicateFunction, PromiseFunction} from './types';
 
 export const delay = (timeout: number): Promise<void> => new Promise(resolve => setTimeout(resolve, timeout));
 
@@ -29,7 +29,7 @@ export const delay = (timeout: number): Promise<void> => new Promise(resolve => 
  * теперь когда запрос вернети в ответе 1, то произойдет повтор запроса кол-во раз указанное в фукнции,
  * когда попытки кончатся, фукнция просто вернет полученые ответ.
  */
-export const withRefresh = (predicate: Predicate, maxCount = 0) => <T = unknown>(fn: PromiseFunction<T>) => {
+export const withRefresh = (predicate: PredicateFunction, maxCount = 0) => <T = unknown>(fn: PromiseFunction<T>) => {
   const refresh = (count: number, ...args: any[]): Promise<T> => fn(...args).then((result: T) => {
     if (predicate(result) && count < maxCount) {
       return refresh(count + 1, ...args);
@@ -44,7 +44,7 @@ export const withRefresh = (predicate: Predicate, maxCount = 0) => <T = unknown>
 /**
  * см. описание withRefresh
  */
-export const withRetry = (predicate: Predicate, maxCount = 0, timeout = 0) => <T = unknown>(fn: PromiseFunction<T>) => {
+export const withRetry = (predicate: PredicateFunction, maxCount = 0, timeout = 0) => <T = unknown>(fn: PromiseFunction<T>) => {
   const retry = (count: number, ...args: any[]): Promise<T> => fn(...args).catch((error: any) => {
     if (predicate(error) && count < maxCount) {
       if (timeout) {

@@ -1,7 +1,7 @@
 import {CancelAction, Container, ErrorAction, StartAction, SuccessAction} from './actions';
 
 export type RequestFunction<T = any> = (...args: any[]) => Promise<T>;
-export type Predicate = <T>(value: T) => boolean;
+export type PredicateFunction = (value: any) => boolean;
 export type PromiseFunction<T> = (...args: any[]) => Promise<T>;
 
 export interface RequestState<D = unknown, E = unknown> {
