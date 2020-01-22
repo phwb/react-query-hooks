@@ -93,3 +93,11 @@ const ParameterRequest = () => {
   );
 };
 ```
+
+## Публикация
+
+```bash
+npm version
+npm run build
+git push --follow-tags origin master && npm publish
+```
