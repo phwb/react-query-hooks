@@ -4,15 +4,15 @@ import {RequestFunction, RequestOptions, RequestState} from '../types';
 import {initialQueryState} from '../reducer/start';
 import {useRequestContext} from './useRequestContext';
 
-export const useRequest = <Data = unknown>(
-  request?: RequestFunction<Data>,
+export const useRequest = <D = unknown, E = Error>(
+  request?: RequestFunction<D>,
   options: RequestOptions = {},
-): RequestState<Data> => {
+): RequestState<D, E> => {
   const {
     start,
     cancel,
     state,
-  } = useRequestContext<Data>();
+  } = useRequestContext<D>();
   const {
     reset = true,
   } = options;

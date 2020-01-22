@@ -97,7 +97,7 @@ const ParameterRequest = () => {
 ## Публикация
 
 ```bash
-npm version
+npm version patch
 npm run build
 git push --follow-tags origin master && npm publish
 ```

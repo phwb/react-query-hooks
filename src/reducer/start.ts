@@ -1,10 +1,9 @@
 import {RequestState, State} from '../types';
 import {StartAction} from '../actions';
 
-export const initialQueryState: RequestState<any> = {
+export const initialQueryState: RequestState<any, any> = {
   __counter: 1,
   loading: false,
-  data: null,
 };
 
 export const start = (state: State, action: StartAction): State => {
