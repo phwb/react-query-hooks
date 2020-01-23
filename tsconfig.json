@@ -5,7 +5,7 @@
     "allowSyntheticDefaultImports": true,
     "outDir": "build",
     "module": "commonjs",
-    "target": "esnext",
+    "target": "es2017",
     "lib": [
       "dom",
       "esnext"
