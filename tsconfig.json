@@ -4,14 +4,13 @@
     "declaration": true,
     "allowSyntheticDefaultImports": true,
     "outDir": "build",
-    "module": "esnext",
+    "module": "commonjs",
     "target": "esnext",
     "lib": [
       "dom",
-      "dom.iterable",
       "esnext"
     ],
-    "allowJs": true,
+    "allowJs": false,
     "jsx": "react",
     "moduleResolution": "node",
     "forceConsistentCasingInFileNames": true,
